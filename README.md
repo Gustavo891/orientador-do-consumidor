@@ -127,7 +127,3 @@ Acerto: 9 de 10. Na primeira execução foram 8 de 10 (`docs/casos_resultados_v1
 - No caso 4, o modelo não carregou a skill, mesmo tendo carregado na primeira execução. A conta estava certa, mas a resposta saiu sem o formato e sem a mensagem pronta. A decisão de usar a skill é do modelo e varia de uma execução para outra.
 - O número de buscas do RAG varia bastante. No caso 2, já foram 5 buscas numa execução, 7 em outra e 1 na última. O resultado foi o mesmo, mas o tempo de resposta mudou de uns 20 s para quase 50 s.
 - No caso 7, o bloqueio descartou também a parte legítima da mensagem (o fone com defeito). O ideal seria remover só a instrução injetada e responder o resto.
-
-## Vídeo
-
-Link: a preencher.

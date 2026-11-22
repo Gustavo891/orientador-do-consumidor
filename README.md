@@ -40,20 +40,37 @@ Outros comandos úteis:
 ## O grafo
 
 ```mermaid
-graph TD
-    inicio([início]) --> guarda_entrada
-    guarda_entrada -- bloqueado --> fim([fim])
-    guarda_entrada -- ok --> agente
-    agente -- consultar_lei --> buscar
-    agente -- outras ferramentas --> ferramentas
-    agente -- resposta --> guarda_saida
-    buscar --> avaliar
-    avaliar -- trechos não bastam --> reformular
-    reformular --> buscar
-    avaliar -- bastam ou 3 tentativas --> responder_busca
-    responder_busca --> agente
-    ferramentas --> agente
-    guarda_saida --> fim
+graph TD;
+	__start__([início]):::first
+	guarda_entrada(guarda_entrada)
+	agente(agente)
+	buscar(buscar)
+	avaliar(avaliar)
+	reformular(reformular)
+	responder_busca(responder_busca)
+	ferramentas(ferramentas)
+	guarda_saida(guarda_saida)
+	__end__([fim]):::last
+	__start__ --> guarda_entrada;
+	guarda_entrada -. bloqueado .-> __end__;
+	guarda_entrada -. ok .-> agente;
+	agente -. chamou consultar_lei .-> buscar;
+	agente -. outras ferramentas .-> ferramentas;
+	agente -. resposta final .-> guarda_saida;
+	buscar --> avaliar;
+	avaliar -. trechos insuficientes .-> reformular;
+	avaliar -. suficientes ou 3 buscas .-> responder_busca;
+	reformular --> buscar;
+	responder_busca -.-> agente;
+	responder_busca -.-> buscar;
+	responder_busca -.-> ferramentas;
+	ferramentas -.-> agente;
+	ferramentas -.-> buscar;
+	ferramentas -.-> ferramentas;
+	guarda_saida --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
 ```
 
 | Nó | O que faz |
@@ -66,8 +83,6 @@ graph TD
 | responder_busca | Entrega os trechos ao agente. Se nada serviu depois de 3 buscas, avisa para ele não inventar. |
 | ferramentas | Executa as ferramentas MCP e o `load_skill`, e anota quais foram usadas. |
 | guarda_saida | Mascara dados pessoais que apareçam na resposta e confere se os artigos citados existem no CDC ou no decreto. Se não existirem, acrescenta um aviso. |
-
-As ligações do diagrama foram simplificadas. Quando o agente pede mais de uma ferramenta na mesma resposta, `responder_busca` e `ferramentas` também podem passar uma para a outra antes de voltar ao agente.
 
 A memória é um checkpointer SQLite (`AsyncSqliteSaver`), com uma thread por conversa. Por isso dá para continuar uma conversa depois de fechar o app.
 
